@@ -45,6 +45,18 @@ module.exports.create = async function (req, res) {
   };
 
 // sign in and create a session for the user
-module.exports.createSession = function(req, res){
-    // TODO later
-}
+module.exports.createSession = async function (req, res) {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user || user.password !== req.body.password) {
+      return res.redirect('back');
+    }
+
+    res.cookie('user_id', user.id);
+    return res.redirect('/users/profile');
+  } catch (err) {
+    console.log('Error in finding user while sign in:', err);
+    return res.redirect('back');
+  }
+};
