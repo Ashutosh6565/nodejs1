@@ -1,11 +1,24 @@
 const User = require('../models/user');
 
+module.exports.profile = async function (req, res) {
+  try {
+    if (req.cookies.user_id) {
+      const user = await User.findById(req.cookies.user_id).exec();
 
-module.exports.profile = function(req, res){
-    return res.render('user_profile', {
-        title: 'User Profile'
-    })
-}
+      if (user) {
+        return res.render('user_profile', {
+          title: 'User profile',
+          user: user,
+        });
+      }
+    } else {
+      return res.redirect('/users/sign-in');
+    }
+  } catch (err) {
+    console.error('Error in profile:', err);
+    return res.redirect('/users/sign-in');
+  }
+};
 
 
 // render the sign up page
