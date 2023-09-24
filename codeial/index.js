@@ -4,14 +4,26 @@ const app = express();
 const port = 8000;
 const expressLayouts = require('express-ejs-layouts');
 const db = require('./config/mongoose');
+//import the main passport and express session library
 const session = require('express-session');
 const passport = require('passport');
+
+//Import the secondary "Strategy" library
 const passportLocal = require('./config/passport-local-strategy');
+
+
+//mongo store is used to store the session cookie in the db 
 const MongoStore = require('connect-mongo');
+
+
 require('dotenv').config()
 // Middleware Order: Use session middleware before initializing Passport
 
-//mongo store is used to store the session cookie in the db 
+
+
+
+// This is the basic express session({..}) initialization.
+
 
 app.use(session({
     name: 'codeial',
@@ -34,13 +46,18 @@ app.use(session({
     )
 }));
 
+// init passport on every route call.
 app.use(passport.initialize());
+// allow passport to use "express-session".
 app.use(passport.session());
+
+
+
 
 app.use(passport.setAuthenticatedUser)
 // ... Other middleware and configurations
 
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static('./assets'));
 app.use(expressLayouts);
