@@ -9,3 +9,5 @@ const commentController = require('../controllers/comment_controller');
 router.post('/create', passport.checkAuthentication, commentController.create);
 
 module.exports  = router;
+
+
